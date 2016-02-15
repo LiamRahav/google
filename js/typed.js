@@ -229,7 +229,7 @@
                         // start typing each new char into existing string
                         // curString: arg, self.el.html: original text inside element
                         var nextString = "Search for " + curString.substr(0, curStrPos + 1);
-                        console.log(nextString);
+                        // console.log(nextString);
                         if (self.attr) {
                             self.el.attr(self.attr, nextString);
                         } else {

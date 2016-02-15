@@ -185,5 +185,8 @@ html, body {
     opacity: 0.39; }
   #suggestions span:nth-child(5) {
     opacity: 0.27; }
+  #suggestions span.selected {
+    background: #eee;
+    opacity: 1; }
 
 /*# sourceMappingURL=style.css.map */

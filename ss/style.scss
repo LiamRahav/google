@@ -54,5 +54,10 @@ html, body {
 			}
 		}
 
+		&.selected {
+			background: #eee;
+			opacity: 1;
+		}
+
 	}
 }

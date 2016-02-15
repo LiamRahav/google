@@ -19,7 +19,7 @@ var suggestLength = 0;
 var refreshSuggestion = true;
 
 function suggest(data) {
-    if (showSuggestions && refreshSuggestion) {
+    if (showSuggestions) {
         if ($('#suggestions').css('display') === 'none') {
             $('#suggestions').css('opacity', 1);
         }
@@ -38,19 +38,21 @@ function suggest(data) {
 }
 
 var suggestTimeout = setTimeout(function() {}, 500);
+var queryText = "";
 
 $('#search-box').on('keyup', function(e) {
     if (e.keyCode === 40) {
+    	if (suggestionIndex == 0) {
+    		queryText = $('#search-box').val();
+    		console.log(queryText);
+    	}
+
         suggestionIndex++;
         if (suggestionIndex > suggestLength) {
         	suggestionIndex--;
         }
 
-        $('#suggestions').css('opacity', 0);
-        $('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
-
-        // $('#suggestions span:nth-child(' + suggestionIndex + ')').css("background", "blue");
-        refreshSuggestion = false;
+        refreshSelection();
     }
 
     else if (e.keyCode === 38) {
@@ -58,41 +60,57 @@ $('#search-box').on('keyup', function(e) {
         if (suggestionIndex < 0) {
         	suggestionIndex = 0;
         }
-        
-        $('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
-        // $('#suggestions span:nth-child(' + suggestionIndex + ')').css("background", "blue");
-        refreshSuggestion = false;
+
+        refreshSelection();
+
+        if (suggestionIndex == 0) {
+    		$('#search-box').val(queryText);
+    		console.log(queryText);
+        }
     }
 
     else {
-        clearTimeout(suggestTimeout);
+    	// if (refreshSuggestion) {
+	        clearTimeout(suggestTimeout);
 
-        var query = $('#search-box').val();
+	        var query = $('#search-box').val();
 
-        if (query.match(urlRegex) && query.indexOf("?") !== 0) {
-            $('#search').addClass('url');
-        } else {
-            $('#search').removeClass('url');
-        }
+	        if (query.match(urlRegex) && query.indexOf("?") !== 0) {
+	            $('#search').addClass('url');
+	        } else {
+	            $('#search').removeClass('url');
+	        }
 
-        if (query === "") {
-            $('#suggestions').css('opacity', 0);
-            showSuggestions = false;
-        } else {
-            showSuggestions = true;
-            $('#suggestions').css('opacity', 1);
+	        if (query === "") {
+	            $('#suggestions').css('opacity', 0);
+	            showSuggestions = false;
+	        } else {
+	            showSuggestions = true;
+	            $('#suggestions').css('opacity', 1);
 
-            suggestTimeout = setTimeout(function() {
-                $.getJSON("http://suggestqueries.google.com/complete/search?callback=?", {
-                    "hl": "en", // Language
-                    "jsonp": "suggest", // jsonp callback function name
-                    "q": query, // query term
-                    "client": "youtube" // force youtube style response, i.e. jsonp
-                });
-            }, 100);
-        }
+	            suggestTimeout = setTimeout(function() {
+	                $.getJSON("http://suggestqueries.google.com/complete/search?callback=?", {
+	                    "hl": "en", // Language
+	                    "jsonp": "suggest", // jsonp callback function name
+	                    "q": query, // query term
+	                    "client": "youtube" // force youtube style response, i.e. jsonp
+	                });
+	            }, 100);
+	        }
+    	// }
     }
 });
+
+function refreshSelection() {
+	for (var i = 0; i < 6; i++) {
+		$('#suggestions span:nth-child(' + i + ')').removeClass("selected");
+	}
+	
+	$('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
+    $('#suggestions span:nth-child(' + suggestionIndex + ')').addClass("selected");
+    showSuggestions = true;
+	refreshSuggestion = false;
+}
 
 $('#search').submit(function(e) {
     $('#search').fadeOut(function() {
