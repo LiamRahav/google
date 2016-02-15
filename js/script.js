@@ -14,20 +14,24 @@ $(function() {
 urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
 currentPlaceholder = 0;
 showSuggestions = false;
+var suggestionIndex = 0;
+var suggestLength = 0;
+var refreshSuggestion = true;
 
 function suggest(data) {
-    if (showSuggestions) {
+    if (showSuggestions && refreshSuggestion) {
         if ($('#suggestions').css('display') === 'none') {
             $('#suggestions').css('opacity', 1);
         }
 
         console.log(data);
-        var suggestLength = data[1].length;
+        suggestionIndex = 0;
+        suggestLength = data[1].length;
         if (suggestLength > 5) suggestLength = 5;
 
 
         $('#suggestions').html("");
-        for (var i = 1; i <= suggestLength; i++) {
+        for (var i = 0; i < suggestLength; i++) {
             $('#suggestions').append("<span>" + data[1][i][0] + "</span>");
         }
     }
@@ -37,9 +41,30 @@ var suggestTimeout = setTimeout(function() {}, 500);
 
 $('#search-box').on('keyup', function(e) {
     if (e.keyCode === 40) {
-        $('#search-box').val($('#suggestions').text());
+        suggestionIndex++;
+        if (suggestionIndex > suggestLength) {
+        	suggestionIndex--;
+        }
+
         $('#suggestions').css('opacity', 0);
-    } else {
+        $('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
+
+        // $('#suggestions span:nth-child(' + suggestionIndex + ')').css("background", "blue");
+        refreshSuggestion = false;
+    }
+
+    else if (e.keyCode === 38) {
+    	suggestionIndex--;
+        if (suggestionIndex < 0) {
+        	suggestionIndex = 0;
+        }
+        
+        $('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
+        // $('#suggestions span:nth-child(' + suggestionIndex + ')').css("background", "blue");
+        refreshSuggestion = false;
+    }
+
+    else {
         clearTimeout(suggestTimeout);
 
         var query = $('#search-box').val();
