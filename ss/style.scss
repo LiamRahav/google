@@ -1,5 +1,4 @@
 @import '_normalize';
-@import url(https://fonts.googleapis.com/css?family=Montserrat:700);
 
 html, body {
 	width: 100%;
@@ -23,6 +22,7 @@ html, body {
 	color: #262626;
 	
 	margin: 0;
+	padding: 0.25em 1.25rem;
 
 	font-family: "Helvetica", "Arial", sans-serif;
 	font-size: 5em;
@@ -43,6 +43,7 @@ html, body {
 #suggestions {
 	span {
 		display: block;
+		padding: 0 1.25rem;
 		font-size: 2em;
 		line-height: 1.8;
 
