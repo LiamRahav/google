@@ -1,16 +1,3 @@
-$(function() {
-    $('#search-box').typed({
-        strings: ["anything", "people", "places", "news", "pictures", "apps", "websites", "events", "products", "flights", "things", "cat videos"],
-        loop: true,
-        typeSpeed: 25,
-        backSpeed: 25,
-        backDelay: 1000,
-        shuffle: true,
-        attr: 'placeholder'
-    });
-});
-
-
 urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
 currentPlaceholder = 0;
 showSuggestions = false;
@@ -105,7 +92,7 @@ function refreshSelection() {
 	for (var i = 0; i < 6; i++) {
 		$('#suggestions span:nth-child(' + i + ')').removeClass("selected");
 	}
-	
+
 	$('#search-box').val($('#suggestions span:nth-child(' + suggestionIndex + ')').text());
     $('#suggestions span:nth-child(' + suggestionIndex + ')').addClass("selected");
     showSuggestions = true;
